@@ -6,6 +6,15 @@ const {isLogged}=require("../middlewares/userAuth")
 router.get("/",userController.loginload);
 router.post("/", userController.logUser);
 
+
+
+
+
+
+
+
+
+
 router.get("/signup", userController.loadregister);
 router.post("/signup", userController.insertUser);
 router.get("/userhome", userController.userHome);
