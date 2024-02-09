@@ -20,36 +20,45 @@
         <div class=" subheading text-center ">
             <h4> Kalikaal Ka Fashion</h4>
         </div>
+        <div class=" subheading text-center ">
+            <h2> Admin Login</h2>
+        </div>
+
         <div class="d-flex justify-content-center mt-5 pb-5 " id="full">
-            <div class="card  p-3 mb-5 bg-white rounded">
+            <div class="card  p-3 mb-5 bg-white" style="border-radius: 5rem;">
                 <div class="card-body">
                     <div style="text-align: center">
                         <h2 class="card-title">Login</h2>
                     </div>
-                    <form class="form-signup" method="post" action="/" id='logform'>
+                    <form class="form-signup" method="post" action="/admin" id='logform'>
                         <div style="text-align: center">
                             <h6 class="sentenceofin">For Amazing Shopping</h6>
+                            <% if (locals.message) { %>
+                                <span style="color: red;">
+                                    <%= message %>
+                                </span>
+                                <% } %>
                         </div>
 
                         <div class="form-group mt-2">
                             <input type="email" name="email" placeholder="Enter your email" class="form-control"
-                                id="typeEmailX" required />
+                                id="typeEmailX" required style="border-radius: 3rem;" />
                         </div>
                         <p>
-                        <div id="error1" style="display: none;" class="alert alert-danger err"></div>
+                        <div id="error2" style="display: none;" class="alert alert-danger err"></div>
                         </p>
-                        
+
 
                         <div class="form-group mt-2">
                             <input type="password" name="password" placeholder=" Enter password" class="form-control"
-                                id="typePasswordX" required />
+                                id="typePasswordX" required style="border-radius: 3rem;" />
                         </div>
                         <br>
                         <p>
-                        <a href="" style="text-decoration: none; color: rgb(120, 118, 118);">Forgot Password?</a>
+                            <a href="" style="text-decoration: none; color: rgb(120, 118, 118);">Forgot Password?</a>
                         </p>
                         <p>
-                        <div id="error2" style="display: none;" class="alert alert-danger err"></div>
+                        <div id="error1" style="display: none;" class="alert alert-danger err"></div>
                         </p>
 
 
@@ -83,6 +92,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
         crossorigin="anonymous"></script>
+    <script src="/public/js/login.js"></script>
 </body>
 
 </html>
