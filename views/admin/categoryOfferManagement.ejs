@@ -1,0 +1,416 @@
+<%- include("../partials/adminHeader") %>
+     <section class="content-main">
+    <div class="content-header">
+      <h2 class="content-title">Category-Offer Management</h2>
+      <div>
+
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCoupon"
+          data-bs-whatever="@getbootstrap" style="background-color: black;">Add Offer +</button>
+
+      </div>
+
+    </div>
+    <% if (locals.message) { %>
+      <input type="text" id="message" value="<%= message %>" hidden>
+      <% } %>
+        <div class="card mb-4">
+          <div class="card-body">
+            <div class="table-responsive">
+              <% if (!offers.length) { %>
+
+                <h1>No Offers Are Added Yet</h1>
+
+                <% }else{ %>
+
+                  <table class="table table-hover" id="categoryOfferTable">
+                    <thead>
+                      <tr class="text-left">
+                        <th class="text-center">No</th>
+                        <th class="text-center">Offer Name</th>
+                        <th class="text-center">Category</th>
+                        <th class="text-center">Discount</th>
+                        <th class="text-center">Starting date</th>
+                        <th class="text-center">Ending date</th>
+
+                        <th class="text-center">Edit</th>
+                        <th class="text-center">Delete</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% for( let i=0; i < offers.length; i++ ) { %>
+
+
+                        <tr class="text-center" id="categoryOffer<%= offers[i]._id %>">
+                          <td width="15%">
+                            <%= i+1 %>
+                          </td>
+                          <td width="20%">
+                            <%= offers[i].offerName %>
+                          </td>
+                          <td width="15%">
+                            <%= offers[i].categoryOffer.category.name %>
+                          </td>
+                          <td width="15%">
+                            <%= offers[i].categoryOffer.discount %>
+                          </td>
+                          <td width="20%">
+                            <%= offers[i].startingDate.toLocaleDateString() %>
+                          </td>
+                          <td width="10%">
+                            <%= offers[i].endingDate.toLocaleDateString()%>
+                          </td>
+
+                          <td width="10%"><a onclick="editOfferData('<%= offers[i]._id %>')"
+                              class="btn btn-sm btn-dark rounded font-sm mt-15" type="button" data-bs-toggle="modal"
+                              data-bs-target="#editCoupon" data-bs-whatever="@getbootstrap">Edit</a></td>
+                          <td width="20%">
+                         
+                              <button id="delete-categoryOffer<%= offers[i]._id %>"
+                                class="btn btn-sm btn-success rounded font-sm mt-15"
+                                onclick="deleteCategoryOffer('<%= offers[i]._id %>')">
+                                Delete
+                              </button>
+                             
+                          </td>
+                        </tr>
+
+                        <% } %>
+                    </tbody>
+                  </table> <!-- table-responsive.// -->
+                  <% } %>
+
+            </div>
+          </div> <!-- card-body end// -->
+        </div> <!-- card end// -->
+
+  </section> <!-- content-main end// -->
+
+
+  <!-- Modal Add Coupon -->
+
+  <div class="modal fade" id="addCoupon" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Offer </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/admin/categoryAddOffer" method="post">
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Offer Name</label>
+              <input type="text" class="form-control" name="offerName" id="offernameadd">
+                <div id="error-productOffer-name-add" class="error-message"></div>
+            </div>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Product</label>
+              <select name="categoryName" id="" class="form-select">
+                <% for( let i=0; i < categories.length; i++ ) { %>
+                  <option class="form-option" value="<%= categories[i]._id %>">
+                    <%= categories[i].name %>
+                  </option>
+                  <% } %>
+              </select>
+              <!-- <input type="text" class="form-control" name="couponName" id="couponName"> -->
+            </div>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Discount Amount</label>
+              <input type="text" class="form-control" name="discountAmount" id="discountAmountadd">
+              <div id="error-discount-add" class="error-message"></div>
+            </div>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Starting date</label>
+              <input type="date" class="form-control" name="startDate" id="couponStartadd" placeholder="YYYY-MM-DD">
+                            <div id="error-startDate-add" class="error-message"></div>
+            </div>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Ending date</label>
+              <input type="date" class="form-control" name="endDate" id="couponExpiryadd" placeholder="YYYY-MM-DD">
+              <div id="error-endDate-add" class="error-message"></div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" style="background-color: black;" onclick=" return validateForm1(event)">Create Offer</button>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!--End Modal  Add Coupon-->
+
+
+  <!-- Modal Edit Coupon -->
+
+
+  <div class="modal fade" id="editCoupon" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Offer </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/admin/categoryEditOffer" method="post">
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Offer Name</label>
+              <input type="text" class="form-control" name="offerName" id="offerName">
+              <div id="error-productOffer-name-edit" class="error-message"></div>
+            </div>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Category</label>
+              <select name="categoryName" id="categoryName" class="form-select">
+                <% for( let i=0; i < categories.length; i++ ) { %>
+                  <option class="form-option" value="<%= categories[i]._id %>">
+                    <%= categories[i].name %>
+                  </option>
+                  <% } %>
+              </select>
+
+            </div>
+            <!-- <div class="mb-3">
+                        <label for="recipient-name" class="col-form-label">Coupon Code</label>
+                        <input type="text" class="form-control" name="couponCode" id="couponCode">
+                    </div> -->
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Discount Amount</label>
+              <input type="text" class="form-control" name="discountAmount" id="discountAmount">
+              <div id="error-discount-edit" class="error-message"></div>
+            </div>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Starting Date (YYYY/MM/DD)</label>
+              <input type="date" class="form-control" name="startDate" id="startDate">
+               <div id="error-startDate-edit" class="error-message"></div>
+            </div>
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">Ending Date (YYYY/MM/DD)</label>
+              <input type="date" class="form-control" name="endDate" id="endDate">
+              <div id="error-endDate-edit" class="error-message"></div>
+            </div>
+            <div class="mb-3">
+              <input type="hidden" class="form-control" id="offerId" name="offerId" />
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" style="background-color: black;" onclick=" return validateForm2(event)">Update Offer</button>
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!--End Modal Edit Coupon-->
+
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
+                        document.write(new Date().getFullYear())
+                    </script> ©, Evara - HTML Ecommerce Template .
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">
+                        All rights reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+    <script src="/public/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/public/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/public/admin-assets/js/vendors/select2.min.js"></script>
+    <script src="/public/admin-assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/public/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="/public/admin-assets/js/main.js" type="text/javascript"></script>
+    <script>
+      function deleteCategoryOffer(offerId){
+         $.ajax({
+          url:`/admin/deleteOffer?id=${offerId}`,
+          type:"DELETE",
+          success:function(response){
+            if(response.success){
+              document.getElementById("categoryOffer"+offerId).remove()
+                 Toastify({
+                text: "offer removed",
+                 backgroundColor: "green",
+             duration: 6000,
+             position: "center" 
+         }).showToast();
+    
+
+            }else{
+                 Toastify({
+                text: "offer  failed to removed",
+                 backgroundColor: "red",
+             duration: 6000,
+             position: "center" 
+         }).showToast();
+    
+
+            }
+
+
+          },
+          error:function(error){
+            console.log(error)
+          }
+        })
+
+      }
+        function editOfferData(id){
+            console.log("vilivhu")
+            $.ajax({
+                url:`/admin/catrgoryEditOffer/${id}`,
+                method:"GET",
+                success:function(res){
+                     console.log(res)
+            document.getElementById("categoryName").value = res.categoryOffer.category
+            document.getElementById('offerName').value = res.offerName;
+            document.getElementById('discountAmount').value = res.categoryOffer.discount;
+            document.getElementById('startDate').value = res.formattedStartingDate
+            document.getElementById("endDate").value = res.formattedEndingDate
+            document.getElementById('offerId').value = res._id;
+                $("#editCoupon").modal("show");
+
+                },
+                error:function(error){
+                    console.log(error)
+                }
+
+            })
+
+        }
+        function validateForm2(event) {
+  // Prevent the form from being submitted by default
+  event.preventDefault();
+
+  // Get the form input values
+    const offerName = document.getElementById('offerName').value;
+  const discountAmount = document.getElementById('discountAmount').value;
+  const startDate = document.getElementById('startDate').value;
+  const endDate = document.getElementById("endDate").value;
+
+  // Define a flag for form validation
+  let isValid = true;
+
+  // Validate the offer name
+  if (offerName.trim() === '') {
+    document.getElementById('error-productOffer-name-edit').innerText = 'Offer name is required';
+    isValid = false;
+  } else {
+    document.getElementById('error-productOffer-name-edit').innerText = '';
+  }
+
+  // Validate the discount amount
+  if (discountAmount.trim() === '' || isNaN(discountAmount)) {
+    document.getElementById('error-discount-edit').innerText = 'Discount amount must be a number';
+    isValid = false;
+  } else {
+    document.getElementById('error-discount-edit').innerText = '';
+  }
+
+  // Validate the start date
+  if (startDate.trim() === '') {
+    document.getElementById('error-startDate-edit').innerText = 'Starting date is required';
+    isValid = false;
+  } else {
+    document.getElementById('error-startDate-edit').innerText = '';
+  }
+
+  // Validate the end date
+  if (endDate.trim() === '') {
+    document.getElementById('error-endDate-edit').innerText = 'Ending date is required';
+    isValid = false;
+  } else {
+    document.getElementById('error-endDate-edit').innerText = '';
+  }
+   if (new Date(startDate) >= new Date(endDate)) {
+    document.getElementById('error-startDate-edit').innerText = 'Starting date must be before the ending date';
+    isValid = false;
+  } else {
+    document.getElementById('error-startDate-edit').innerText = '';
+  }
+
+  // If the form is valid, submit the form
+  if (isValid) {
+    event.target.closest('form').submit();
+  }
+}
+        function validateForm1(event) {
+  // Prevent the form from being submitted by default
+  event.preventDefault();
+
+  // Get the form input values
+    const offerName = document.getElementById('offernameadd').value;
+  const discountAmount = document.getElementById('discountAmountadd').value;
+  const startDate = document.getElementById('couponStartadd').value;
+  const endDate = document.getElementById('couponExpiryadd').value;
+
+  // Define a flag for form validation
+  let isValid = true;
+
+  // Validate the offer name
+  if (offerName.trim() === '') {
+    document.getElementById('error-productOffer-name-add').innerText = 'Offer name is required';
+    isValid = false;
+  } else {
+    document.getElementById('error-productOffer-name-add').innerText = '';
+  }
+
+  // Validate the discount amount
+  if (discountAmount.trim() === '' || isNaN(discountAmount)) {
+    document.getElementById('error-discount-add').innerText = 'Discount amount must be a number';
+    isValid = false;
+  } else {
+    document.getElementById('error-discount-add').innerText = '';
+  }
+
+  // Validate the start date
+  if (startDate.trim() === '') {
+    document.getElementById('error-startDate-add').innerText = 'Starting date is required';
+    isValid = false;
+  } else {
+    document.getElementById('error-startDate-add').innerText = '';
+  }
+
+  // Validate the end date
+  if (endDate.trim() === '') {
+    document.getElementById('error-endDate-add').innerText = 'Ending date is required';
+    isValid = false;
+  } else {
+    document.getElementById('error-endDate-add').innerText = '';
+  }
+   if (new Date(startDate) >= new Date(endDate)) {
+    document.getElementById('error-startDate-add').innerText = 'Starting date must be before the ending date';
+    isValid = false;
+  } else {
+    document.getElementById('error-startDate-add').innerText = '';
+  }
+
+  // If the form is valid, submit the form
+  if (isValid) {
+    event.target.closest('form').submit();
+  }
+}
+     
+
+
+    </script>
+    
+ 
+    
+        
+</body>
+
+
+
+
+</html>

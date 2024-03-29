@@ -1,0 +1,118 @@
+<%- include("../partials/adminHeader") %>
+            <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Edit Coupons </h2>
+              <% if (locals.message) { %>
+                  <span style="color: red;">
+
+                    <%= message %>
+                    
+                </span>
+               
+              <% } %>
+
+            </div>
+
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <form method="post" action="/admin/editCoupon?id=<%= coupon._id %>">
+
+                            <body onload="setDefaultStartDate()">
+
+                                <div class="mb-4">
+                                    <label for="coupon-name" class="form-label">Coupon Name</label>
+                                    <input type="text" id="coupon-name" name="couponName" value="<%= coupon.name %>"
+                                        class="form-control" />
+                                    <div id="error-coupon-name" class="error-message"></div>
+                                </div>
+
+                                <div>
+                                    <label for="startingDate" class="form-label">Start Date</label>
+                                    <input type="date" name="startDate" class="form-control" required="true"
+                                        id="startingDate" value="<%= createdOn %>" />
+                                    <div id="error-start-date" class="error-message"></div>
+                                </div>
+
+                                <div>
+                                    <label for="expiringDate" class="form-label">End Date</label>
+                                    <input type="date" name="endDate" class="form-control" id="expiringDate"
+                                        required="true"  value="<%= expireOn %>"/>
+                                    <div id="error-end-date" class="error-message"></div>
+                                </div>
+
+                             <div>
+      <label for="offer-price" class="form-label">Discount</label>
+      <div class="input-group">
+        <input type="text" name="offerPrice" placeholder="1-100%" class="form-control" value="<%= coupon.discount %>" />
+        <span class="input-group-text">%</span>
+      </div>
+      <div id="error-offer-price" class="error-message"></div>
+      </div>
+                               
+
+                                <div class="d-grid">
+                                    <button class="btn btn-primary mt-20" onclick=" return validateForm(event)"
+                                        type="submit">Edit Coupon</button>
+                                </div>
+
+                                <!-- Container for global error messages -->
+                                <div id="err-msg" class="error-message"></div>
+
+                            </body>
+                        </form>
+
+                    </div>
+                   
+                    <!-- here -->
+                </div> <!-- .row // -->
+            </div> <!-- card body .// -->
+        </div> <!-- card .// -->
+    </section> <!-- content-main end// -->
+
+
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
+                        document.write(new Date().getFullYear())
+                    </script> ©, Evara - HTML Ecommerce Template .
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">
+                        All rights reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+    <script src="/public/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/public/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/public/admin-assets/js/vendors/select2.min.js"></script>
+    <script src="/public/admin-assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/public/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="/public/admin-assets/js/main.js" type="text/javascript"></script>
+    <script>
+        function formatDate(dateString) {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+    </script>
+    
+ 
+    
+        
+</body>
+
+
+
+
+</html>

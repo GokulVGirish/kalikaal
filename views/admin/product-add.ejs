@@ -1,0 +1,381 @@
+<%- include("../partials/adminHeader") %>
+        <section class="content-main">
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Add Product</h2>
+                </div>
+               
+            </div>
+            <div class="card mb-4">
+                <!-- card-header end// -->
+                <div class="card-body">
+                    <form method="post" action="/admin/productadd" enctype="multipart/form-data"
+                        onsubmit="return validateForm()">
+                        <div class="mb-4">
+                            <label for="product_name" class="form-label">Product Name</label>
+                            <input type="text" placeholder="Type here" name="productName" class="form-control border"
+                                id="product_name">
+                            <div id="productName-error" class="error-message"></div>
+                        </div>
+                        <div class="col-lg-4 mb-4">
+                            <label class="form-label">Brand</label>
+                            <select class="form-select border" name="brand">
+                                <% for (let i=0; i < brand.length; i++) { %>
+                                    <option value="<%=brand[i]._id %>">
+                                        <%= brand[i].brandName %>
+                                    </option>
+                                    <% } %>
+                            </select>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Full description</label>
+                            <textarea id="description_name" placeholder="Type here" name="description"
+                                class="form-control border" rows="4"></textarea>
+                            <div id="description-error" class="error-message"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="mb-4">
+                                    <label class="form-label">Regular price</label>
+                                    <input placeholder="₹" name="regularPrice" type="text" class="form-control border">
+                                    <div id="regularPrice-error" class="error-message"></div>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class=" mb-4">
+                                    <label class="form-label">Discount</label>
+                                    <input placeholder="%" name="salePrice" type="text" class="form-control border">
+                                    <span class="input-group-text">%</span>
+                                    <div id="salePrice-error" class="error-message"></div>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="mb-4">
+                                    <label class="form-label"> Total Quantity</label>
+                                    <input placeholder="" name="quantity" type="text" class="form-control border">
+                                    <div id="quantity-error" class="error-message"></div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="mb-4">
+                                    <label class="form-label"> Small Size quantity</label>
+                                    <input placeholder="" name="ssize" type="text" class="form-control border">
+                                          <div id="ssize-error" class="error-message"></div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="mb-4">
+                                    <label class="form-label"> Medium Size quantity</label>
+                                    <input placeholder="" name="msize" type="text" class="form-control border">
+                                    <div id="msize-error" class="error-message"></div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="mb-4">
+                                    <label class="form-label"> Large Size quantity</label>
+                                    <input placeholder="" name="lsize" type="text" class="form-control border">
+                                    <div id="lsize-error" class="error-message"></div>
+                                 
+
+                                </div>
+                            </div>
+                            <div id="size-error" class="error-message"></div>
+                            <div class="col-lg-4">
+                                <div class="mb-4">
+                                    <label class="form-label">Color</label>
+                                    <input placeholder="" name="color" type="text" class="form-control border">
+                                    <div id="color-error" class="error-message"></div>
+                                </div>
+                            </div>
+
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <div class="row gx-2">
+                                        <div class="col-sm-6 mb-3">
+                                            <label class="form-label">Category</label>
+                                            <select class="form-select border" style="width: 150px;" name="category">
+                                                <% for (let i=0; i < cat.length; i++) { %>
+                                                    <option value="<%= cat[i]._id %>">
+                                                        <%= cat[i].name %>
+                                                    </option>
+                                                    <% } %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                           <div class="card mb-2">
+        <div class="card-header">
+            <h4>Choose images</h4>
+        </div>
+        <div class="card-body">
+            <div class="input-upload">
+                <input class="form-control border d-none" name="images" id="imageInput" type="file" onchange="image_select()" multiple>
+                <button class="btn btn-primary btn-sm" onclick="document.getElementById('imageInput').click()">choose images</button>
+                <div id="imageType-error" class="error-message"></div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body d-flex justify-content-start" id="previewImage">
+        
+    </div>
+  
+
+                            <div>
+                                <!-- <button class="btn btn-md rounded font-sm hover-up" type="button" onclick="validateAndSubmit()">Publish</button> -->
+                                <input type="submit" value="publish" class="btn btn-md rounded font-sm hover-up"
+                                    onclick="validateAndSubmit()">
+                            </div>
+                    </form>
+
+
+
+
+                    <!-- itemlist  .// -->
+
+                </div> <!-- card-body end// -->
+            </div> <!-- card end// -->
+
+        </section> <!-- content-main end// -->
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
+                        document.write(new Date().getFullYear())
+                    </script> ©, Evara - HTML Ecommerce Template .
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">
+                        All rights reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+    <script src="/public/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/public/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/public/admin-assets/js/vendors/select2.min.js"></script>
+    <script src="/public/admin-assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/public/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="/public/admin-assets/js/main.js" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#customerTable').DataTable();
+        });
+
+    </script>
+    <script>
+         var images = [];
+
+    function image_select() {
+        images = [];
+        var selectedImages = document.getElementById("imageInput").files;
+        if (selectedImages.length === 0) {
+            document.getElementById("previewImage").innerHTML = "";
+            return;
+        }
+
+        for (let i = 0; i < selectedImages.length; i++) {
+            images.push({
+                "name": selectedImages[i].name,
+                "url": URL.createObjectURL(selectedImages[i]),
+                "file": selectedImages[i]
+            });
+        }
+        document.getElementById("previewImage").innerHTML = image_show();
+    }
+
+    function image_show() {
+        var image = "";
+        images.forEach((i) => {
+            image += `<div class="image_container d-flex justify-content-center position-relative">
+                <img src="${i.url}" alt="Image">
+                <span class="position-absolute" onclick="delete_image(${images.indexOf(i)})">&times;</span>
+            </div>`;
+        });
+        return image;
+    }
+
+    function delete_image(index) {
+        images.splice(index, 1);
+        document.getElementById("previewImage").innerHTML = image_show();
+        updateFileInput();
+    }
+
+    function updateFileInput() {
+        const fileInput = document.getElementById("imageInput");
+        const fileList = images.map(img => img.file);
+        const fileArray = Array.from(fileList);
+        const fileListObject = new DataTransfer();
+        fileArray.forEach(file => fileListObject.items.add(file));
+        fileInput.files = fileListObject.files;
+    }
+
+     
+       
+        //  const myForm = document.getElementById("myForm");
+        //     myFrom.addEventListener("submit", (e) => { // <-- Typo here, should be myForm
+        //         console.log("worked")
+        //         const valid = validateForm(e);
+        //         if (!valid) {
+        //             e.preventDefault();
+        //         }
+        //         else {
+        //             console.log(valid)
+        //         }
+        //     })
+        function validateAndSubmit() {
+            if (validateForm()) {
+               
+                // If validation passes, submit the form
+                document.forms[0].submit(); // Assuming this is the first (and only) form on your page
+            }
+        }
+
+        function validateForm() {
+            // Reset previous error messages
+            resetErrorMessages();
+
+            var isValid = true;
+
+            var productName = document.getElementById("product_name").value;
+            var regularPrice = document.getElementsByName("regularPrice")[0].value;
+            var salePrice = document.getElementsByName("salePrice")[0].value;
+            var quantity = document.getElementsByName("quantity")[0].value;
+            var color = document.getElementsByName("color")[0].value
+            var descriptionName = document.getElementById("description_name").value;
+            var ssizeInput = document.getElementsByName("ssize")[0].value;
+            var msizeInput = document.getElementsByName("msize")[0].value;
+            var lsizeInput = document.getElementsByName("lsize")[0].value;
+
+            // Parse input values as integers if they are not empty
+            var ssize = ssizeInput !== "" ? parseInt(ssizeInput) : "";
+            var msize = msizeInput !== "" ? parseInt(msizeInput) : "";
+            var lsize = lsizeInput !== "" ? parseInt(lsizeInput) : "";
+           
+           
+
+
+            // Check if inputs are not empty
+            if (!productName.trim()) {
+    displayErrorMessage("productName-error", "Product Name is required");
+    isValid = false;
+} else if (!/^[a-zA-Z\s]*$/.test(productName)) {
+    displayErrorMessage("productName-error", "Product Name can only contain letters and spaces");
+    isValid = false;
+} else if (productName.length < 3) {
+    displayErrorMessage("productName-error", "Product Name must be at least 3 characters long");
+    isValid = false;
+} else if (productName.length > 50) {
+    displayErrorMessage("productName-error", "Product Name cannot exceed 50 characters");
+    isValid = false;
+}
+
+            // Check if prices are positive numbers
+            if (isNaN(regularPrice) || regularPrice <= 0) {
+                displayErrorMessage("regularPrice-error", "Regular price must be a positive number");
+                isValid = false;
+            }
+            if (descriptionName === "") {
+                displayErrorMessage("description-error", "Description is required");
+                isValid = false;
+            }
+
+            if (isNaN(salePrice) || salePrice <= 0) {
+                displayErrorMessage("salePrice-error", "Discount must be a positive number");
+                isValid = false;
+            }
+            if (salePrice<1||salePrice>100) {
+                displayErrorMessage("salePrice-error", "Discount should be between 1 - 100%");
+                isValid = false;
+            }
+
+            
+
+            // Check if quantity is a positive integer
+            if (!/^[1-9]\d*$/.test(quantity)) {
+                displayErrorMessage("quantity-error", "Quantity must be a positive integer");
+                isValid = false;
+            }
+            if(ssize===""||isNaN(ssize)||ssize<0){
+                displayErrorMessage("ssize-error", "Give a valid positive small-size");
+                isValid = false;
+
+            }
+            if(msize===""||isNaN(msize)||msize<0){
+                displayErrorMessage("msize-error", "Give a valid positive medium-size");
+                isValid = false;
+
+            }
+            if(lsize===""||isNaN(lsize)||lsize<0){
+                displayErrorMessage("lsize-error", "Give a valid positive large-size");
+                isValid = false;
+
+            }
+
+           
+            var subTotal = (ssize + msize + lsize)
+           
+
+            if (quantity < subTotal) {
+                displayErrorMessage("size-error", "The sum of sub-quantities cannot exceed Total Quantity");
+                isValid = false;
+
+            }if(subTotal<quantity){
+                displayErrorMessage("size-error", "The sum of sub-quantities is  less than Total Quantity");
+                isValid=false
+            }
+
+
+            if (color === "") {
+                displayErrorMessage("color-error", "Color must be provided");
+                isValid = false;
+            }
+             const input = document.getElementById('imageInput');
+            const files = input.files;
+          const allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+         if (files.length === 0) {
+         displayErrorMessage("imageType-error", "add Images");
+        isValid = false;
+         } else {
+    // Check if any non-image files are present
+    for (let i = 0; i < files.length; i++) {
+        if (!allowedExtensions.test(files[i].name)) {
+            displayErrorMessage("imageType-error", "Only image files are allowed");
+            isValid = false;
+            break; 
+        }
+    }
+}
+            
+
+            return isValid;
+        }
+
+        function displayErrorMessage(elementId, message) {
+            var errorElement = document.getElementById(elementId);
+            errorElement.innerText = message;
+            errorElement.style.display = "block";
+        }
+
+        function resetErrorMessages() {
+            var errorElements = document.querySelectorAll(".error-message");
+            errorElements.forEach(function (element) {
+                element.innerText = "";
+                element.style.display = "none";
+            });
+        }
+    </script>
+</body>
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-products-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:12 GMT -->
+
+</html>

@@ -1,0 +1,264 @@
+<%- include("../partials/adminHeader") %>
+            <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Coupons </h2>
+              <% if (locals.message) { %>
+                  <span style="color: red;">
+
+                    <%= message %>
+                    
+                </span>
+               
+              <% } %>
+
+            </div>
+
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <form method="post" action="/admin/addCoupon">
+
+                            <body onload="setDefaultStartDate()">
+
+                                <div class="mb-4">
+                                    <label for="coupon-name" class="form-label">Coupon Name</label>
+                                    <input type="text" id="coupon-name" name="couponName" placeholder="Type here"
+                                        class="form-control" />
+                                    <div id="error-coupon-name" class="error-message"></div>
+                                </div>
+
+                                <div>
+                                    <label for="startingDate" class="form-label">Start Date</label>
+                                    <input type="date" name="startDate" class="form-control" required="true"
+                                        id="startingDate" />
+                                    <div id="error-start-date" class="error-message"></div>
+                                </div>
+
+                                <div>
+                                    <label for="expiringDate" class="form-label">End Date</label>
+                                    <input type="date" name="endDate" class="form-control" id="expiringDate"
+                                        required="true" />
+                                    <div id="error-end-date" class="error-message"></div>
+                                </div>
+
+                             <div>
+      <label for="offer-price" class="form-label">Discount</label>
+      <div class="input-group">
+        <input type="text" name="offerPrice" placeholder="1-100%" class="form-control" />
+        <span class="input-group-text">%</span>
+      </div>
+      <div id="error-offer-price" class="error-message"></div>
+      </div>
+                               
+
+                                <div class="d-grid">
+                                    <button class="btn btn-primary mt-20" onclick=" return validateForm(event)"
+                                        type="submit">Add Coupon</button>
+                                </div>
+
+                                <!-- Container for global error messages -->
+                                <div id="err-msg" class="error-message"></div>
+
+                            </body>
+                        </form>
+
+                    </div>
+                    <div class="col-md-7 ml-105">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+
+
+                                        <th>Name</th>
+                                        <th>Created On</th>
+                                        <th>Expire On</th>
+                                        <th>Discount</th>
+                                     
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                        <th>edit</th>
+
+
+                                    </tr>
+                                </thead>
+                                   <tbody>
+
+                                
+                               <% if (coupons && coupons.length > 0) { %>
+                                    <% for (let i=0; i < coupons.length; i++) { %>
+                                        <tr id="couponDelete<%=coupons[i]._id %>">
+                                            <td class="text-start"><%= coupons[i].name %></td>
+                                            <td class="text-start"><%= new Date(coupons[i].createdOn).toLocaleDateString('en-US') %></td>
+                                            <td class="text-start"><%= new Date(coupons[i].expireOn).toLocaleDateString('en-US') %></td>
+                                           <td class="text-center"><%= coupons[i].discount %> %</td>
+                                            <td class="text-start">
+                                                 <% if (coupons[i].isListed) { %>
+                                             <span class="badge bg-success">Listed</span>
+                                            <% } else { %>
+                                            <span class="badge bg-secondary">Not Listed</span>
+                                               <% } %>
+                                             </td>
+                                            <td  class="text-center">
+                   
+                         <button
+                      class="badge bg-success"
+                      style="width: 50px"
+                      onclick="couponDelete('<%=coupons[i]._id %>')"
+                    >
+                      Delete
+                    </button>
+                  
+                    
+                  
+                  </td>
+                  <td class="text-center"><a  class="badge bg-success"
+                      style="width: 50px" href="/admin/editCoupon?id=<%=coupons[i]._id %>">Edit</a></td>
+                  
+                                        </tr>
+                                    <% } %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="6" class="text-center">No coupons available</td>
+                                    </tr>
+                                <% } %>
+                                                            </tbody>
+
+
+
+                            </table>
+
+                        </div>
+                    </div> <!-- .col// -->
+                </div> <!-- .row // -->
+            </div> <!-- card body .// -->
+        </div> <!-- card .// -->
+    </section> <!-- content-main end// -->
+
+
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
+                        document.write(new Date().getFullYear())
+                    </script> ©, Evara - HTML Ecommerce Template .
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">
+                        All rights reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+    <script src="/public/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/public/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/public/admin-assets/js/vendors/select2.min.js"></script>
+    <script src="/public/admin-assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/public/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="/public/admin-assets/js/main.js" type="text/javascript"></script>
+    
+ 
+    <script>
+        function couponDelete(couponId){
+            $.ajax({
+                url:`/admin/couponDelete?id=${couponId}`,
+                type:"DELETE",
+                success:function(response){
+                    if(response.success){
+                        window.location.href=response.url
+                    }
+
+
+                },
+                error:function(error){
+                    console.log(error)
+                }
+            })
+
+        }
+
+          function setDefaultStartDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            let month = (today.getMonth() + 1).toString().padStart(2, '0'); // Add leading zero if needed
+            let day = today.getDate().toString().padStart(2, '0'); // Add leading zero if needed
+
+            // Set the default value of the "Start Date" input field to today's date
+            document.getElementById('startingDate').value = `${year}-${month}-${day}`;
+        }
+
+        function validateForm() {
+            // Reset all error messages
+            document.querySelectorAll('.error-message').forEach(element => element.innerHTML = '');
+
+            const sDate = document.getElementsByName('startDate')[0].value;
+            const eDate = document.getElementsByName('endDate')[0].value;
+            const sDateObj = new Date(sDate);
+            const eDateObj = new Date(eDate);
+            const todayDateObj = new Date();
+            todayDateObj.setHours(0, 0, 0, 0);
+
+            if (sDateObj > eDateObj) {
+                document.getElementById('error-end-date').innerHTML = 'End date should be after the start date';
+                return false;
+            }
+
+            if (sDateObj <= todayDateObj) {
+                document.getElementById('error-start-date').innerHTML = 'Starting date should be greater than or equal to today\'s date';
+                return false;
+            }
+
+            let name = document.getElementsByName('couponName')[0].value;
+            const nameRegex = /^[A-Za-z0-9]{1,50}$/;
+            console.log("name",name)
+
+            if (!nameRegex.test(name)) {
+                document.getElementById('error-coupon-name').innerHTML = 'Coupon Name error';
+                return false;
+            }
+
+            const offerPriceInput = document.getElementsByName('offerPrice')[0];
+            
+
+            const offerPrice = offerPriceInput.value.trim() !== '' ? parseInt(offerPriceInput.value) : NaN;
+           
+
+            if (isNaN(offerPrice) ) {
+                document.getElementById('error-offer-price').innerHTML = 'Please enter numeric values for Offer Price and Minimum Price';
+                return false;
+            }
+            if(offerPrice>100||offerPrice<1){
+                document.getElementById('error-offer-price').innerHTML = 'Please enter numeric values between 1 and 100';
+                return false;
+
+            }
+
+
+            //     const formData = {
+            //     couponName: name,
+            //     startDate: sDateObj,
+            //     endDate: eDateObj,
+            //     offerPrice: offerPrice,
+            //     minimumPrice: minimumPrice
+            // };
+
+            // console.log(formData);
+
+            // If there are no errors, the form will submit naturally
+            return true;
+        }
+
+    </script>
+    
+        
+</body>
+
+
+
+
+</html>

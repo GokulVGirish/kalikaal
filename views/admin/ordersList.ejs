@@ -1,0 +1,186 @@
+<%- include("../partials/adminHeader") %>
+ <section class="content-main">
+    <div class="content-header">
+      <div>
+        <h2 class="content-title card-title">Order List </h2>
+
+      </div>
+
+    </div>
+    <div class="card mb-4">
+      <div class="card-body">
+        <div class="table-responsive">
+          <% if (!allOrders.length) { %>
+            <h1>No Orders Yet</h1>
+            <% } else { %>
+
+              <table class="table table-hover" id="orderList">
+                <thead>
+                  <tr>
+                    <th>ORDER ID</th>
+                    <th scope="col">USER NAME</th>
+                    <th scope="col">DATE</th>
+                    <th scope="col">AMOUNT</th>
+                    <th scope="col">PAYMENT TYPE</th>
+                    <!-- <th scope="col">STATUS</th> -->
+                    <!-- <th scope="col">CHANGE STATUS</th> -->
+                    <th scope="col">VIEW DETAILS </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% for( let i=0; i < allOrders.length; i++ ) { %>
+                    <tr>
+                      <td width="10%">
+                        <%= allOrders[i].orderId %>
+                      </td>
+                      <td width="8%">
+                        <%= allOrders[i].userOrderDetails[0].name %>
+                      </td>
+                      <td width="15%">
+                        <%= allOrders[i].orderedOn.toLocaleDateString() %>
+                      </td>
+                      <td width="7%">
+                        <%= allOrders[i].totalAmount %>
+                      </td>
+                      <td width="7%">
+                        <%= allOrders[i].paymentMethod %>
+                      </td>
+                      <!-- <td width="7%">
+                        <% if (allOrders[i].status=='pending' ) { %>
+                          <span id="status<%= allOrders[i]._id %>" class="badge rounded-pill alert-warning">
+                            <%= allOrders[i].status %>
+                          </span>
+                          <% } else if (allOrders[i].status=='processing' ) {%>
+                            <span id="status<%= allOrders[i]._id %>" class="badge rounded-pill alert-secondary">
+                              <%= allOrders[i].status %>
+                            </span>
+                            <% } else if (allOrders[i].status=='confirmed' ) {%>
+                              <span id="status<%= allOrders[i]._id %>" class="badge rounded-pill alert-dark">
+                                <%= allOrders[i].status %>
+                              </span>
+                              <% } else if (allOrders[i].status=='shipped' ) {%>
+                                <span id="status<%= allOrders[i]._id %>" class="badge rounded-pill alert-info">
+                                  <%= allOrders[i].status %>
+                                </span>
+                                <% } else if (allOrders[i].status=='outForDelivery' ) {%>
+                                  <span id="status<%= allOrders[i]._id %>" class="badge rounded-pill alert-warning">
+                                    <%= allOrders[i].status %>
+                                  </span>
+                                  <% } else if (allOrders[i].status=='delivered' ) {%>
+                                    <span id="status<%= allOrders[i]._id %>" class="badge rounded-pill alert-success">
+                                      <%= allOrders[i].status %>
+                                    </span>
+                                    <% } else if (allOrders[i].status=='cancelled' ) {%>
+                                      <span id="status<%= allOrders[i]._id %>" class="badge rounded-pill alert-warning">
+                                        <%= allOrders[i].status %>
+                                      </span>
+                                      <% } else {%>
+                                        <span id="status<%= allOrders[i]._id %>"
+                                          class="badge rounded-pill alert-danger">
+                                          <%= allOrders[i].status %>
+                                        </span>
+                                        <% } %>
+                      </td> -->
+
+                      <!-- <td width="10%">
+                        <% if (allOrders[i].status=="cancelled" ) { %>
+                          <span class="badge bg-danger">cancelled by the user</span>
+                          <% } %>
+                            <% if (allOrders[i].status=='pending' ) { %>
+                              <a onclick="changeOrderStatus('<%= allOrders[i]._id %>','processing')"
+                                class="btn btn-primary rounded font-sm">Approve</a>
+                              <% } else if (allOrders[i].status=='processing' ) {%>
+                                <a onclick="changeOrderStatus('<%= allOrders[i]._id %>','confirmed')"
+                                  class="btn btn-success rounded font-sm">Confirm</a>
+                                <% } else if (allOrders[i].status=='confirmed' ) {%>
+                                  <a onclick="changeOrderStatus('<%= allOrders[i]._id %>','shipped')"
+                                    class="btn btn-warning rounded font-sm">Ship</a>
+                                  <% } else if (allOrders[i].status=='shipped' ) {%>
+                                    <a onclick="changeOrderStatus('<%= allOrders[i]._id %>','outForDelivery')"
+                                      class="btn  btn-success rounded font-sm">Send Out</a>
+                                    <% } else if (allOrders[i].status=='outForDelivery' ) {%>
+                                      <a onclick="changeOrderStatus('<%= allOrders[i]._id %>','delivered')"
+                                        class="btn btn-primary rounded font-sm">Mark delivery Done</a>
+                                      <% } else if (allOrders[i].status=='delivered' ) { %>
+                                        <span class="badge bg-success">Delivered</span>
+                                        <% } %>
+                      </td> -->
+
+                      <td width="10%">
+                        <a href="/admin/orderdetails/<%= allOrders[i]._id %>/<%= allOrders[i].user %>"
+                          class="btn btn-md bg-dark rounded font-sm">Details</a>
+                      </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+              </table>
+              <% } %>
+
+        </div>
+      </div>
+    </div>
+  </section>
+         <!-- content-main end// -->
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
+                        document.write(new Date().getFullYear())
+                    </script> ©, Evara - HTML Ecommerce Template .
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">
+                        All rights reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+    <script src="/public/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/public/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/public/admin-assets/js/vendors/select2.min.js"></script>
+    <script src="/public/admin-assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/public/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="/public/admin-assets/js/main.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    
+    <script>
+        $(document).ready(function () {
+            $('#orderList').DataTable({ordering:false});
+        });
+
+    </script>
+    <script>
+        function changeOrderStatus(orderId, status){
+            $.ajax({
+                url:`/admin/orderstatuschange`,
+                type:"PATCH",
+                data:{
+                    orderId: orderId,
+                    status: status
+
+                },
+                success:function(response){
+                    if(response.success){
+                        location.reload()
+                    }
+
+                },
+                error:function(error){
+                    console.log(error)
+                }
+
+            })
+
+        }
+    </script>
+  
+       
+</body>
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-products-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:12 GMT -->
+
+</html>

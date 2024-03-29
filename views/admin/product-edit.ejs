@@ -1,0 +1,435 @@
+<%- include("../partials/adminHeader") %>
+        <section class="content-main">
+            <div class="row">
+                <div class="col-9">
+                    <div class="content-header">
+                        <h2 class="content-title">Edit Product</h2>
+
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+
+                        <div class="card-body">
+                            <form method="post" id="myForm" action="/admin/editProduct/<%=product._id%>?_method=PUT"
+                                enctype="multipart/form-data" multiple onsubmit=" return validateForm()">
+                                <input type="hidden" name="_method" value="PUT">
+                                <div class="mb-4">
+                                    <label for="product_name" class="form-label">Product Name</label>
+                                    <input type="text" name="productName" value="<%= product.productName %>"
+                                        class="form-control border" id="product_name">
+                                    <div id="productName-error" class="error-message"></div>
+                                </div>
+                                <div class="col-lg-4 mb-4">
+                                    <label class="form-label">Brand</label>
+                                    <select class="form-select border" name="brand">
+    <% for (let i = 0; i < brand.length; i++) { %>
+        <option value="<%= brand[i]._id %>" <% if (brand[i]._id.toString() === product.brand.toString()) { %> selected <% } %>>
+            <%= brand[i].brandName %>
+        </option>
+    <% } %>
+</select>
+
+
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Full description</label>
+                                    <textarea name="description" class="form-control border"
+                                        rows="4"><%= product.description %></textarea>
+                                    <div id="description_name" class="error-message"></div>
+                                    <div id="description-error" class="error-message"></div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Regular price</label>
+                                            <input placeholder="$" name="regularPrice" type="text"
+                                                value="<%= product.regularPrice %>" class="form-control border">
+                                            <div id="regularPrice-error" class="error-message"></div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Discount</label>
+                                            <input name="salePrice" type="text" value="<%= product.discount %>"
+                                                class="form-control border">
+                                                 <span class="input-group-text">%</span>
+                                            <div id="salePrice-error" class="error-message"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Quantity</label>
+                                            <input name="quantity" type="text" value="<%= product.totalQuantity %>"
+                                                class="form-control border">
+                                            <div id="quantity-error" class="error-message"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label"> Small Size quantity</label>
+                                            <input name="ssize" type="text" value="<%= product.size.s.quantity %>"
+                                                class="form-control border">
+                                                <div id="ssize-error" class="error-message"></div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label class="form-label"> Medium Size quantity</label>
+                                            <input name="msize" type="text" value="<%= product.size.m.quantity %>"
+                                                class="form-control border">
+                                                <div id="msize-error" class="error-message"></div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <label class="form-label"> Large Size quantity</label>
+                                            <input name="lsize" type="text" value="<%= product.size.l.quantity %>"
+                                                class="form-control border">
+                                                <div id="lsize-error" class="error-message"></div>
+                                        </div>
+                                        <div id="size-error" class="error-message"></div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="mb-4">
+                                            <label class="form-label">Color</label>
+                                            <input name="color" type="text" value="<%= product.color %>"
+                                                class="form-control border">
+                                            <div id="color-error" class="error-message"></div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="card mb-4">
+
+                                    <div class="card-body">
+                                        <div class="row gx-2">
+                                            <div class="col-sm-6 mb-3">
+                                                <label class="form-label">Category</label>
+                                                <select class="form-select border" style="width: 150px;"
+                                                    name="category">
+                                                    <% for (let i=0; i < cat.length; i++) { %>
+                                                        <option value="<%= cat[i]._id %>" <% if (cat[i]._id.toString()===product.category.toString()) { %>
+                                                            selected
+                                                         
+                                                        <% } %>>
+                                                            <%= cat[i].name %>
+                                                        </option>
+                                                        <% } %>
+                                                </select>
+                                            </div>
+                                        </div> <!-- row.// -->
+                                    </div>
+                                </div> <!-- card end// -->
+
+
+                                <div class="card mb-2">
+                                    <div class="card-header">
+                                        <h4>Choose images</h4>
+                                    </div>
+
+                                    <div id="addedImagesContainer" class="col-md-6">
+                                        <% for (let i=0; i < product.productImage.length; i++) { %>
+                                            <div class="col-md-12 mb-4">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <img class="rounded" style="width: 50px; height: 60px;"
+                                                            src="/public/uploads/product-images/<%= product.productImage[i] %>"
+                                                            alt="image" data-filename="<%= product.productImage[i] %>">
+                                                        <span class="delete-icon"
+                                                            onclick="deleteImage('<%= product._id %>', '<%= product.productImage[i] %>')">❌</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <% } %>
+                                    </div>
+
+
+                                    <div class="card-body">
+                                        <div class="input-upload">
+                                            <img src="assets/imgs/theme/upload.svg" alt="">
+                                            <input class="form-control border" name="images" id="imageInput" type="file"
+                                                multiple>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <!-- card end// -->
+
+                                <div>
+
+
+                                    <input type="submit" value="Update" class="btn btn-md rounded font-sm hover-up"
+                                        id="updatebtn" onclick="validateAndSubmit()">
+                                </div>
+                            </form>
+                        </div>
+                    </div> <!-- card end// -->
+
+                </div>
+
+
+
+            </div>
+            </div>
+        </section>
+        <footer class="main-footer font-xs">
+            <div class="row pb-30 pt-15">
+                <div class="col-sm-6">
+                    <script>
+                        document.write(new Date().getFullYear())
+                    </script> ©, Evara - HTML Ecommerce Template .
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end">
+                        All rights reserved
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+    <script src="/public/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/public/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/public/admin-assets/js/vendors/select2.min.js"></script>
+    <script src="/public/admin-assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/public/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script src="/public/admin-assets/js/main.js" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#customerTable').DataTable();
+        });
+
+    </script>
+    <script>
+        const selectedImages = []
+        document.getElementById("imageInput").addEventListener("change", (event) => {
+            // Target the container for displaying thumbnails
+            const addedImagesContainer = document.getElementById("addedImagesContainer");
+            addedImagesContainer.innerHTML = " "
+            const files = event.target.files;
+            // Add the file to the selected images array
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i]
+                // Add the file to the selected images array
+                selectedImages.push(file)
+                // Create thumbnail element
+                const thumbnail = document.createElement("div");
+                thumbnail.classList.add("thumbnail");
+                // Create image element
+                const img = document.createElement("img");
+                img.src = URL.createObjectURL(file);
+                img.alt = "thumbnail";
+
+                // Set a fixed width for the image
+                img.style.width = "50px"; // Adjust the width as needed
+                img.style.height = "auto";
+
+                // Create remove icon
+                const removeIcon = document.createElement("span");
+                removeIcon.classList.add("remove-icon");
+                removeIcon.innerHTML = "&times;"; // Multiplication symbol as a cross
+
+                // Event listener to remove the image on icon click
+                removeIcon.addEventListener("click", function () {
+                    // Remove the file from the selected images array
+                    const index = selectedImages.indexOf(file);
+                    if (index !== -1) {
+                        selectedImages.splice(index, 1);
+                    }
+
+                    // Remove the thumbnail from the container
+                    thumbnail.remove();
+                });
+
+                // Append elements to thumbnail
+                thumbnail.appendChild(img);
+                thumbnail.appendChild(removeIcon);
+
+                // Append thumbnail to the container
+                addedImagesContainer.appendChild(thumbnail);
+
+            }
+
+
+
+
+        })
+
+
+        function deleteImage(productId, filename) {
+            deleteSingleImage(productId, filename);
+        }
+
+        function deleteSingleImage(productId, filename) {
+             swal({
+        title: "Are you sure?",
+        text: "Remove Image ?",
+        icon: "warning",
+        buttons: ["Cancel", "Yes, remove Image"],
+        dangerMode: true,
+    }).then((confirmed) => {
+        if (confirmed) {
+            // alert("hi")
+            fetch("/admin/deleteImage", {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ productId, filename }),
+            })
+                .then((response) => location.reload())
+                .then((data) => {
+                    // Handle success or error
+                    if (data.success) {
+                        removeImage(filename);
+                        // location.reload()
+                    } else {
+                        console.error("Error deleting image:", data.error);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error:", error);
+                });
+        } else {
+            swal("Cancelled", "Remove action cancelled", "info");
+        }
+    });
+           
+        }
+
+        function removeImage(filename) {
+            const imageElement = document.querySelector(`[data-filename="${filename}"]`);
+
+            if (imageElement) {
+                imageElement.closest('.col-md-12').remove();
+            }
+        }
+
+
+
+
+    </script>
+
+    <script>
+
+        function validateAndSubmit() {
+            if (validateForm()) {
+                // If validation passes, submit the form
+                document.forms[0].submit(); // Assuming this is the first (and only) form on your page
+            }
+        }
+
+        function validateForm() {
+            // Reset previous error messages
+            resetErrorMessages();
+
+            var isValid = true;
+
+            var productName = document.getElementById("product_name").value;
+            var regularPrice = document.getElementsByName("regularPrice")[0].value;
+            var salePrice = document.getElementsByName("salePrice")[0].value;
+            var quantity = document.getElementsByName("quantity")[0].value;
+           var color = document.getElementsByName("color")[0].value
+            var descriptionName = document.getElementById("description_name").value;
+            var ssizeInput = document.getElementsByName("ssize")[0].value;
+            var msizeInput = document.getElementsByName("msize")[0].value;
+            var lsizeInput = document.getElementsByName("lsize")[0].value;
+
+            // Parse input values as integers if they are not empty
+            var ssize = ssizeInput !== "" ? parseInt(ssizeInput) : "";
+            var msize = msizeInput !== "" ? parseInt(msizeInput) : "";
+            var lsize = lsizeInput !== "" ? parseInt(lsizeInput) : "";
+            // Check if inputs are not empty
+            if (productName === "") {
+                displayErrorMessage("productName-error", "Product Name is required");
+                isValid = false;
+            }
+
+            // Check if prices are positive numbers
+            if (isNaN(regularPrice) || regularPrice <= 0) {
+                displayErrorMessage("regularPrice-error", "Regular price must be a positive number");
+                isValid = false;
+            }
+         if (isNaN(salePrice) || salePrice <= 0) {
+                displayErrorMessage("salePrice-error", "Discount must be a positive number");
+                isValid = false;
+            }
+            if (salePrice<1||salePrice>100) {
+                displayErrorMessage("salePrice-error", "Discount should be between 1 - 100%");
+                isValid = false;
+            }
+
+            // Check if quantity is a positive integer
+            if (!/^[1-9]\d*$/.test(quantity)) {
+                displayErrorMessage("quantity-error", "Quantity must be a positive integer");
+                isValid = false;
+            }
+            if (ssize === "" || isNaN(ssize) || ssize < 0) {
+                displayErrorMessage("ssize-error", "Give a valid positive small-size");
+                isValid = false;
+
+            }
+            if (msize === "" || isNaN(msize) || msize < 0) {
+                displayErrorMessage("msize-error", "Give a valid positive medium-size");
+                isValid = false;
+
+            }
+            if (lsize === "" || isNaN(lsize) || lsize < 0) {
+                displayErrorMessage("lsize-error", "Give a valid positive large-size");
+                isValid = false;
+
+            }
+
+            console.log(ssize, msize, lsize)
+            var subTotal = (ssize + msize + lsize)
+            console.log(subTotal)
+            console.log(quantity)
+
+            if (quantity < subTotal) {
+                displayErrorMessage("size-error", "The sum of sub-quantities cannot exceed Total Quantity");
+                isValid = false;
+
+            }
+            if (subTotal < quantity) {
+                displayErrorMessage("size-error", "The sum of sub-quantities is  less than Total Quantity");
+                isValid = false
+            }
+
+
+
+            if (color === "") {
+                displayErrorMessage("color-error", "Color must be provided");
+                isValid = false;
+            }
+            // Additional checks can be added for other fields if needed
+
+            // Additional checks can be added for other fields if needed
+
+            return isValid;
+        }
+
+        function displayErrorMessage(elementId, message) {
+            var errorElement = document.getElementById(elementId);
+            errorElement.innerText = message;
+            errorElement.style.display = "block";
+        }
+
+        function resetErrorMessages() {
+            var errorElements = document.querySelectorAll(".error-message");
+            errorElements.forEach(function (element) {
+                element.innerText = "";
+                element.style.display = "none";
+            });
+        }
+
+    </script>
+</body>
+
+
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-products-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:12 GMT -->
+
+</html>

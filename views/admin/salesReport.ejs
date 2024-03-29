@@ -1,0 +1,275 @@
+<%- include("../partials/adminHeader") %>
+      <section class="content-main">
+        
+    <style>
+        .pagination {
+            display: flex;
+            justify-content: center;
+        }
+
+
+
+        .active {
+            /* Add styles for the active page */
+
+            color: #fff;
+        }
+
+        .btn:hover {
+            /* Add styles for button hover state */
+            background-color: #ddd;
+        }
+
+        .table-spacing th,
+        .table-spacing td {
+            padding-left: 80px;
+            /* Adjust the value as needed for the desired spacing */
+        }
+        
+    </style>
+
+  <div class="row">
+    <div class="col-md-8">
+        <div class="content-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2 class="content-title card-title">Sales Report</h2>
+            </div>
+        </div>
+        <!-- Place your sales report content here -->
+    </div>
+    <div class="col-md-4">
+        <% if (locals.totalPrice) { %>
+            <div class="summary-box">
+                <h3>Total Revenue</h3>
+                <p><%= totalPrice %></p>
+                <h3>Total Sales</h3>
+                <p><%= count %></p>
+            </div>
+        <% } %>
+    </div>
+</div>
+
+
+
+    <div class="card mb-4">
+        <header class="card-header">
+            <div class="row gx-3">
+
+
+                <div class="col-lg-2 col-6 col-md-3">
+                    <select class="form-select" onchange="location.href='/admin/salesReport?day=' + this.value">
+                        <% if (locals.salesToday) { %>
+                            <option value="salesToday" selected>salesToday</option>
+                            <option value="salesWeekly">salesWeekly</option>
+                            <option value="salesMonthly">salesMonthly</option>
+                            <option value="salesYearly">salesYearly</option>
+                            <% } else if (locals.salesWeekly) { %>
+                                <option value="salesWeekly" selected>salesWeekly</option>
+                                <option value="salesToday">salesToday</option>
+                                <option value="salesMonthly">salesMonthly</option>
+                                <option value="salesYearly">salesYearly</option>
+                                <% } else if (locals.salesMonthly) { %>
+                                    <option value="salesMonthly" selected>salesMonthly</option>
+                                    <option value="salesToday">salesToday</option>
+                                    <option value="salesWeekly">salesWeekly</option>
+                                    <option value="salesYearly">salesYearly</option>
+                                    <% } else if (locals.salesYearly) { %>
+                                        <option value="salesYearly" selected>salesYearly</option>
+                                        <option value="salesToday">salesToday</option>
+                                        <option value="salesWeekly">salesWeekly</option>
+                                        <option value="salesMonthly">salesMonthly</option>
+                                        <% } %>
+                    </select>
+                </div>
+                <div class="col-md-2 col-6">
+                    <input type="date" id="selectedDate" class="form-control" value="<%= locals.date ? date : '' %>" onchange="dateWiseFilter()">
+
+                </div>
+                <div class="col-lg-6 col-md-6 ms-auto text-md-end">
+                    <button href="" id="createSalesReport" class="btn btn-primary mb-2" onclick="downloadPdf()">Generate PDF</button>
+                    <button href="" id="downloadExcelReport" class="btn btn-success mb-2" >Download Excel</button>
+                </div>
+
+            </div>
+        </header>
+    </div>
+
+
+
+
+    <div class="right mt-5 container">
+        <table id="myTable" class="table table-hover">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th> order ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Products</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">payment</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Coupon</th>
+
+                    <th scope="col" class="text-end"> Total Price </th>
+                </tr>
+            </thead>
+            <tbody>
+
+
+                <% for (let i=0; i < data.length; i++) { %>
+
+                    <tr>
+                        <td>
+                            <%= i + 1 %>
+                        </td>
+                        <td>
+                            <%= data[i].orderId%>
+                        </td>
+                        <td><b>
+                                <%= data[i].theUser.name %>
+                            </b></td>
+
+                       <td>
+<b>     <%= data[i].populatedProduct.productName %>     </b>
+</td>
+
+                        <td>
+                            <%= data[i].orderedOn.toLocaleString('en-IN') %>
+                        </td>
+                        <td>
+                            <%= data[i].paymentMethod %>
+                        </td>
+                        <td>
+                            <%= data[i].products.status %>
+                        </td>
+                        <td>
+                        <% if (data[i].couponDiscount) { %>
+                            <span>    <%= data[i].couponDiscount %> %</span>
+                         
+                        <% } else { %>
+                            <span>   no Coupon</span>
+
+                        <% } %>
+                         
+                        </td>
+                        <td class="text-end">
+                            <%= data[i].products.productPrice %>
+                        </td>
+                    </tr>
+
+                    <% } %>
+            </tbody>
+        </table>
+
+
+        <% if (totalPages) { %>
+            <div class="pagination">
+                <% if (currentPage> 1) { %>
+                    <button class="btn btn-sm"><a href="?page=<%= currentPage - 1 %>">Previous</a></button>
+                    <% } %>
+
+                        <% for (let i=1; i <=totalPages; i++) { %>
+                            <button class="btn btn-sm <%= i === currentPage ? 'active' : '' %>">
+                                <a href="?page=<%= i %>">
+                                    <%= i %>
+                                </a>
+                            </button>
+                            <% } %>
+
+                                <% if (currentPage < totalPages) { %>
+                                    <button class="btn btn-sm"><a href="?page=<%= currentPage + 1 %>">Next</a></button>
+                                    <% } %>
+            </div>
+            <% } %>
+      </section>
+      <!-- content-main end// -->
+      <footer class="main-footer font-xs">
+        <div class="row pb-30 pt-15">
+          <div class="col-sm-6">
+            <script>
+              document.write(new Date().getFullYear());
+            </script>
+            ©, Evara - HTML Ecommerce Template .
+          </div>
+          <div class="col-sm-6">
+            <div class="text-sm-end">All rights reserved</div>
+          </div>
+        </div>
+      </footer>
+    </main>
+    <script src="/public/admin-assets/js/vendors/jquery-3.6.0.min.js"></script>
+    <script src="/public/admin-assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="/public/admin-assets/js/vendors/select2.min.js"></script>
+    <script src="/public/admin-assets/js/vendors/perfect-scrollbar.js"></script>
+    <script src="/public/admin-assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <!-- Main Script -->
+    <script
+      src="/public/admin-assets/js/main.js"
+      type="text/javascript"
+    ></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        $("#customerTable").DataTable();
+      });
+    </script>
+    <script>
+      const message = document.querySelector("#message");
+      setTimeout(() => {
+        message.innerText = "";
+      }, 7000);
+       function dateWiseFilter() {
+                        const selectedDate = document.getElementById("selectedDate").value;
+                        // alert(selectedDate);
+                        window.location.href = `/admin/dateWiseFilter?date=${selectedDate}`
+                        // $.ajax({
+                        //     url : "/admin/dateWiseFilter",
+                        //     method : "post",
+                        //     data : {
+                        //         date : selectedDate
+                        //     },
+                        //     success : (response)=>{
+                        //         if(response.status  === true){
+                        //             alert("done")
+                        //         }
+                        //     }
+                        // })
+                    }
+    </script>
+    <script>
+        function downloadPdf() {
+            const element = document.getElementById('myTable')
+         
+            html2pdf().from(element).save();
+            
+        }
+    </script>
+    <script>
+
+        document.getElementById("downloadExcelReport").addEventListener('click', function() {
+          var table = document.getElementById('myTable');
+          var wb = XLSX.utils.table_to_book(table);
+          var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+      
+          function s2ab(s) {
+            var buf = new ArrayBuffer(s.length);
+            var view = new Uint8Array(buf);
+            for (var i = 0; i < s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+            return buf;
+          }
+      
+          var blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' });
+          saveAs(blob, 'table.xlsx');
+        });
+
+      </script>
+ 
+  </body>
+
+  <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-products-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:12 GMT -->
+</html>
