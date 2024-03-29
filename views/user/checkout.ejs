@@ -1633,7 +1633,7 @@ document.getElementById("applybtn").classList.remove("disabled");
               if(response.done){
                 window.location.href=response.url
 
-              }else{
+              }else if(response.message){
                 Toastify({
                 text: `Add money to wallet`,
                 duration: 3000,

@@ -1,4 +1,4 @@
-const { off } = require("../models/adminModel")
+
 const offermodel=require("../models/offerModel")
 
 const getAllOfferOfProducts=()=>{

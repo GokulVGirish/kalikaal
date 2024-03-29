@@ -2,7 +2,7 @@ const cartHelper=require("../helpers/cartHelper")
 const wishlistModel=require("../models/wishListModel")
 const wishlistHelper=require("../helpers/wishlistHelper")
 const offerHelper=require("../helpers/offerHelper")
-const { use } = require("../routes/userRoute")
+
 const getWishList=async(req,res,next)=>{
     try{
         const user=req.session.user

@@ -2,7 +2,7 @@ const offerModel=require("../models/offerModel")
 const offerHelper=require("../helpers/offerHelper")
 const productHelper=require("../helpers/productHelper")
 const categoryModel=require("../models/categoryModel")
-const { findByIdAndDelete } = require("../models/adminModel")
+
 const productOfferPageGet=async(req,res,next)=>{
     try{
        const offers=await offerHelper.getAllOfferOfProducts()
