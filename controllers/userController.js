@@ -10,7 +10,7 @@ const brandModel = require("../models/brandModel");
 const categotyModel=require("../models/categoryModel")
 const reviewModel=require("../models/reviewModel")
 const offerHelper=require("../helpers/offerHelper")
-const bcrypt=require("bcrypt")
+const bcrypt=require("bcryptjs")
 const wishlistHelper=require("../helpers/wishlistHelper")
 
 
@@ -33,12 +33,13 @@ const userCkeck=(req,res,next)=>{
 
 const sentOtp = async (req, res,next) => {
 
-  console.log("request come to send the otp");
+
   try {
     const email = req.params.id;
     req.session.email=email
    
     const otp = await otpHelper.generateOtp(email)
+    
     req.session.otpCreationTime = Date.now();
     req.session.otpExpiryTime = Date.now() + 60 * 1000;
   
