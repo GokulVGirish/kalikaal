@@ -34,7 +34,6 @@ const getProductAddPage = async (req, res,next) => {
   try {
     const category = await categoryModel.find({ isListed: true });
     const brand = await brandModel.find({ isBlocked: false });
-
     res.render("product-add", { cat: category, brand: brand });
   } catch (error) {
   next(error)

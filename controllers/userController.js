@@ -794,7 +794,7 @@ const items = await productModel.find({}).sort({createdOn:1});
     let endIndex = startIndex + itemsPerPage;
     let totalPages = Math.ceil(products.length / 6);
     const currentProduct = products.slice(startIndex, endIndex);
-    res.render("newarrivals", {
+    res.render("newArrivals", {
       product: currentProduct,
 
       totalPages,

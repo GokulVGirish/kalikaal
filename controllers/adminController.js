@@ -2,6 +2,7 @@ const adminModel=require("../models/adminModel")
 const categoryModel=require("../models/categoryModel")
 const orderModel=require("../models/orderModel")
 const dateHelper=require("../helpers/dateHelper")
+
 const loginload = (req, res,next) => {
     try{
         if (req.session.admin) {
@@ -20,12 +21,15 @@ const loginload = (req, res,next) => {
 const logAdmin=async(req,res,next)=>{
     try{
         const admin = await adminModel.findOne({ email: req.body.email });
+        
         if (admin) {
+         
           if (admin.password === req.body.password) {
             req.session.admin = admin;
 
             res.redirect("/admin/admindash");
           } else {
+            
             req.flash("message", "Invalid username or password");
             res.redirect("/admin");
           }
