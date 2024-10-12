@@ -9,7 +9,6 @@ const session=require("express-session")
 const bodyParser = require("body-parser");
 const flash=require("express-flash")
 const methodOverride = require("method-override");
-//g
 
 const nocache=require("nocache")
 

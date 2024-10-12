@@ -9,10 +9,10 @@ const generateOtp = (userEmail) => {
         otp += digits[Math.floor(Math.random() * 10)];
       }
       const transporter = nodemailer.createTransport({
-        service: "gmail", // Replace with your email service
+        service: "gmail", 
         auth: {
-          user: process.env.email, // Replace with your email address
-          pass: process.env.passkey, // Replace with your email password
+          user: process.env.EMAIL_SERVICE_ID, 
+          pass: process.env.EMAIL_SERVICE_PASS, 
         },
       });
       const mailOptions = {
